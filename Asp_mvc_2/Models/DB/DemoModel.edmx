@@ -4,7 +4,22 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="DemoDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="DemoDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="laporan">
+          <Key>
+            <PropertyRef Name="id_laporan" />
+          </Key>
+          <Property Name="id_laporan" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_outbond" Type="int" Nullable="false" />
+          <Property Name="id_pelanggan" Type="int" Nullable="false" />
+          <Property Name="keterangan" Type="nchar" MaxLength="255" />
+          <Property Name="tgl_akhir" Type="date" Nullable="false" />
+          <Property Name="tgl_mulai" Type="date" Nullable="false" />
+          <Property Name="tgl_pesan" Type="date" Nullable="false" />
+          <Property Name="quantity" Type="int" />
+          <Property Name="harga" Type="int" />
+          <Property Name="jumlah" Type="int" />
+        </EntityType>
         <EntityType Name="LOOKUPRole">
           <Key>
             <PropertyRef Name="LOOKUPRoleID" />
@@ -16,6 +31,27 @@
           <Property Name="RowCreatedDateTime" Type="datetime" />
           <Property Name="RowModifiedSYSUserID" Type="int" Nullable="false" />
           <Property Name="RowModifiedDateTime" Type="datetime" />
+        </EntityType>
+        <EntityType Name="outbond">
+          <Key>
+            <PropertyRef Name="id_outbond" />
+          </Key>
+          <Property Name="id_outbond" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="keterangan" Type="nchar" MaxLength="255" />
+          <Property Name="harga" Type="int" Nullable="false" />
+          <Property Name="tgl_pesan" Type="date" />
+          <Property Name="tgl_mulai" Type="date" />
+        </EntityType>
+        <EntityType Name="pelanggan">
+          <Key>
+            <PropertyRef Name="id_pelanggan" />
+          </Key>
+          <Property Name="id_pelanggan" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="no_id" Type="nchar" MaxLength="255" />
+          <Property Name="nama" Type="nchar" MaxLength="255" />
+          <Property Name="alamat" Type="nchar" MaxLength="255" />
+          <Property Name="no_tlp1" Type="nchar" MaxLength="255" />
+          <Property Name="no_tlp2" Type="nchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="SYSUser">
           <Key>
@@ -92,8 +128,35 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_laporan_outbond">
+          <End Role="outbond" Type="Self.outbond" Multiplicity="1" />
+          <End Role="laporan" Type="Self.laporan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="outbond">
+              <PropertyRef Name="id_outbond" />
+            </Principal>
+            <Dependent Role="laporan">
+              <PropertyRef Name="id_outbond" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_laporan_pelanggan">
+          <End Role="pelanggan" Type="Self.pelanggan" Multiplicity="1" />
+          <End Role="laporan" Type="Self.laporan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="pelanggan">
+              <PropertyRef Name="id_pelanggan" />
+            </Principal>
+            <Dependent Role="laporan">
+              <PropertyRef Name="id_pelanggan" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="DemoDBModelStoreContainer">
+          <EntitySet Name="laporan" EntityType="Self.laporan" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LOOKUPRole" EntityType="Self.LOOKUPRole" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="outbond" EntityType="Self.outbond" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="pelanggan" EntityType="Self.pelanggan" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SYSUser" EntityType="Self.SYSUser" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SYSUserProfile" EntityType="Self.SYSUserProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SYSUserRole" EntityType="Self.SYSUserRole" Schema="dbo" store:Type="Tables" />
@@ -109,9 +172,16 @@
             <End Role="SYSUser" EntitySet="SYSUser" />
             <End Role="SYSUserRole" EntitySet="SYSUserRole" />
           </AssociationSet>
+          <AssociationSet Name="FK_laporan_outbond" Association="Self.FK_laporan_outbond">
+            <End Role="outbond" EntitySet="outbond" />
+            <End Role="laporan" EntitySet="laporan" />
+          </AssociationSet>
+          <AssociationSet Name="FK_laporan_pelanggan" Association="Self.FK_laporan_pelanggan">
+            <End Role="pelanggan" EntitySet="pelanggan" />
+            <End Role="laporan" EntitySet="laporan" />
+          </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="DemoDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -225,7 +295,82 @@
             <End Role="SYSUser" EntitySet="SYSUsers" />
             <End Role="SYSUserRole" EntitySet="SYSUserRoles" />
           </AssociationSet>
+          <EntitySet Name="laporans" EntityType="DemoDBModel.laporan" />
+          <EntitySet Name="outbonds" EntityType="DemoDBModel.outbond" />
+          <EntitySet Name="pelanggans" EntityType="DemoDBModel.pelanggan" />
+          <AssociationSet Name="FK_laporan_outbond" Association="DemoDBModel.FK_laporan_outbond">
+            <End Role="outbond" EntitySet="outbonds" />
+            <End Role="laporan" EntitySet="laporans" />
+          </AssociationSet>
+          <AssociationSet Name="FK_laporan_pelanggan" Association="DemoDBModel.FK_laporan_pelanggan">
+            <End Role="pelanggan" EntitySet="pelanggans" />
+            <End Role="laporan" EntitySet="laporans" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="laporan">
+          <Key>
+            <PropertyRef Name="id_laporan" />
+          </Key>
+          <Property Name="id_laporan" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_outbond" Type="Int32" Nullable="false" />
+          <Property Name="id_pelanggan" Type="Int32" Nullable="false" />
+          <Property Name="keterangan" Type="String" MaxLength="255" FixedLength="true" Unicode="true" />
+          <Property Name="tgl_akhir" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="tgl_mulai" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="tgl_pesan" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="quantity" Type="Int32" />
+          <Property Name="harga" Type="Int32" />
+          <Property Name="jumlah" Type="Int32" />
+          <NavigationProperty Name="outbond" Relationship="DemoDBModel.FK_laporan_outbond" FromRole="laporan" ToRole="outbond" />
+          <NavigationProperty Name="pelanggan" Relationship="DemoDBModel.FK_laporan_pelanggan" FromRole="laporan" ToRole="pelanggan" />
+        </EntityType>
+        <EntityType Name="outbond">
+          <Key>
+            <PropertyRef Name="id_outbond" />
+          </Key>
+          <Property Name="id_outbond" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="keterangan" Type="String" MaxLength="255" FixedLength="true" Unicode="true" />
+          <Property Name="harga" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="laporans" Relationship="DemoDBModel.FK_laporan_outbond" FromRole="outbond" ToRole="laporan" />
+          <Property Name="tgl_pesan" Type="DateTime" Precision="0" />
+          <Property Name="tgl_mulai" Type="DateTime" Precision="0" />
+        </EntityType>
+        <EntityType Name="pelanggan">
+          <Key>
+            <PropertyRef Name="id_pelanggan" />
+          </Key>
+          <Property Name="id_pelanggan" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="no_id" Type="String" MaxLength="255" FixedLength="true" Unicode="true" />
+          <Property Name="nama" Type="String" MaxLength="255" FixedLength="true" Unicode="true" />
+          <Property Name="alamat" Type="String" MaxLength="255" FixedLength="true" Unicode="true" />
+          <Property Name="no_tlp1" Type="String" MaxLength="255" FixedLength="true" Unicode="true" />
+          <Property Name="no_tlp2" Type="String" MaxLength="255" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="laporans" Relationship="DemoDBModel.FK_laporan_pelanggan" FromRole="pelanggan" ToRole="laporan" />
+        </EntityType>
+        <Association Name="FK_laporan_outbond">
+          <End Type="DemoDBModel.outbond" Role="outbond" Multiplicity="1" />
+          <End Type="DemoDBModel.laporan" Role="laporan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="outbond">
+              <PropertyRef Name="id_outbond" />
+            </Principal>
+            <Dependent Role="laporan">
+              <PropertyRef Name="id_outbond" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_laporan_pelanggan">
+          <End Type="DemoDBModel.pelanggan" Role="pelanggan" Multiplicity="1" />
+          <End Type="DemoDBModel.laporan" Role="laporan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="pelanggan">
+              <PropertyRef Name="id_pelanggan" />
+            </Principal>
+            <Dependent Role="laporan">
+              <PropertyRef Name="id_pelanggan" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -284,6 +429,45 @@
                 <ScalarProperty Name="RowCreatedDateTime" ColumnName="RowCreatedDateTime" />
                 <ScalarProperty Name="RowModifiedSYSUserID" ColumnName="RowModifiedSYSUserID" />
                 <ScalarProperty Name="RowModifiedDateTime" ColumnName="RowModifiedDateTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="laporans">
+            <EntityTypeMapping TypeName="DemoDBModel.laporan">
+              <MappingFragment StoreEntitySet="laporan">
+                <ScalarProperty Name="jumlah" ColumnName="jumlah" />
+                <ScalarProperty Name="harga" ColumnName="harga" />
+                <ScalarProperty Name="quantity" ColumnName="quantity" />
+                <ScalarProperty Name="tgl_pesan" ColumnName="tgl_pesan" />
+                <ScalarProperty Name="tgl_mulai" ColumnName="tgl_mulai" />
+                <ScalarProperty Name="tgl_akhir" ColumnName="tgl_akhir" />
+                <ScalarProperty Name="keterangan" ColumnName="keterangan" />
+                <ScalarProperty Name="id_pelanggan" ColumnName="id_pelanggan" />
+                <ScalarProperty Name="id_outbond" ColumnName="id_outbond" />
+                <ScalarProperty Name="id_laporan" ColumnName="id_laporan" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="outbonds">
+            <EntityTypeMapping TypeName="DemoDBModel.outbond">
+              <MappingFragment StoreEntitySet="outbond">
+                <ScalarProperty Name="tgl_mulai" ColumnName="tgl_mulai" />
+                <ScalarProperty Name="tgl_pesan" ColumnName="tgl_pesan" />
+                <ScalarProperty Name="harga" ColumnName="harga" />
+                <ScalarProperty Name="keterangan" ColumnName="keterangan" />
+                <ScalarProperty Name="id_outbond" ColumnName="id_outbond" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="pelanggans">
+            <EntityTypeMapping TypeName="DemoDBModel.pelanggan">
+              <MappingFragment StoreEntitySet="pelanggan">
+                <ScalarProperty Name="no_tlp2" ColumnName="no_tlp2" />
+                <ScalarProperty Name="no_tlp1" ColumnName="no_tlp1" />
+                <ScalarProperty Name="alamat" ColumnName="alamat" />
+                <ScalarProperty Name="nama" ColumnName="nama" />
+                <ScalarProperty Name="no_id" ColumnName="no_id" />
+                <ScalarProperty Name="id_pelanggan" ColumnName="id_pelanggan" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

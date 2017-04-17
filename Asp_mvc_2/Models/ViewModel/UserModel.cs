@@ -12,7 +12,9 @@ namespace Asp_mvc_2.Models.ViewModel
     public class UserSignUpView
     {
         [Key]
-        public int SYSUserID { get; set; } public int LOOKUPRoleID { get; set; } public string RoleName { get; set; }
+        public int SYSUserID { get; set; } 
+        public int LOOKUPRoleID { get; set; } 
+        public string RoleName { get; set; }
         [Required(ErrorMessage = "*")]
         [Display(Name = "Login ID")]
         public string LoginName { get; set; }

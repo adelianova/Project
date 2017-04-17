@@ -29,11 +29,8 @@ namespace Asp_mvc_2.Models.DB
         public virtual DbSet<SYSUser> SYSUsers { get; set; }
         public virtual DbSet<SYSUserProfile> SYSUserProfiles { get; set; }
         public virtual DbSet<SYSUserRole> SYSUserRoles { get; set; }
-
-        public System.Data.Entity.DbSet<Asp_mvc_2.Models.ViewModel.UserSignUpView> UserSignUpViews { get; set; }
-
-        public System.Data.Entity.DbSet<Asp_mvc_2.Models.ViewModel.UserLoginView> UserLoginViews { get; set; }
-
-        public System.Data.Entity.DbSet<Asp_mvc_2.Models.ViewModel.UserProfileView> UserProfileViews { get; set; }
+        public virtual DbSet<laporan> laporans { get; set; }
+        public virtual DbSet<outbond> outbonds { get; set; }
+        public virtual DbSet<pelanggan> pelanggans { get; set; }
     }
 }

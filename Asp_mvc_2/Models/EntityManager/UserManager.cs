@@ -4,7 +4,6 @@ using System.Linq;
 using System.Web;
 using Asp_mvc_2.Models.DB;
 using Asp_mvc_2.Models.ViewModel;
-using System.Collections.Generic;
 
 namespace Asp_mvc_2.Models.EntityManager
 {

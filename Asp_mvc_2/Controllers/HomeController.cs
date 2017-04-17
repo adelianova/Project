@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using System.Web.Security;
 using Asp_mvc_2.Models.ViewModel;
 using Asp_mvc_2.Models.EntityManager;
+using Asp_mvc_2.Models.DB;
 
 namespace Asp_mvc_2.Controllers
 {
@@ -87,6 +88,33 @@ namespace Asp_mvc_2.Controllers
                 ViewBag.Status = "Update Sucessful!";
             }
             return View(profile); 
+        }
+        public ActionResult Pelanggan()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult Pelanggan(pelanggan data)
+        {
+            if (ModelState.IsValid)
+            {
+                using (DemoDBEntities db = new DemoDBEntities())
+                {
+                    db.pelanggans.Add(data);
+                    db.SaveChanges();
+                }
+                ModelState.Clear();
+                ViewBag.message = data.nama + " " +  " telah terdaftar";
+            }
+            return View();
+        }
+        public ActionResult Laporan()
+        {
+            return View();
+        }
+        public ActionResult Outbond()
+        {
+            return View();
         }
     }
 }
